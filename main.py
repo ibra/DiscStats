@@ -10,7 +10,7 @@ import re
 @click.option('--dir', default="package")
 def main(dir):
     package_dir = os.path.join(os.getcwd(), dir)
-    if(os.path.exists(package_path) == False):
+    if(os.path.exists(package_dir) == False):
         print("Could not find the package directory! Make sure its in the project folder and is unzipped into one \"package\" folder.")
         return
 
