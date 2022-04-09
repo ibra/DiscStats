@@ -8,15 +8,13 @@ from prettytable import PrettyTable
 
 packageDir = ".\package"
 
-mostMessagedServer = 0
 mostUsedWord = 0
-mostMessagesOnDate = ""
-emojisUsed = {"kekw": 5, "lol": 10, "monkaS": 15}  # dummy data
 
 
-@ click.command()
+@click.command()
 def main():
     messages = defaultdict(int)
+    emojisUsed = defaultdict(str)
     cumulativeChars = 0
     cumulativeWords = 0
 
@@ -41,10 +39,14 @@ def main():
         cumulativeChars/cumulativeMessages, 2)) + " characters"])
     table.add_row(['Average Message Length [words]', str(round(
         cumulativeWords/cumulativeMessages, 2)) + " words"])
-    table.add_row(["Chattiest Day", max(messages, key=messages.get) + "("])
+    table.add_row(
+        ["Chattiest Day", f'{max(messages, key=messages.get)} ({max(messages.values())} messages)'])
+    # TODO: implement most used emoji, this code uses undefined variables atm
+    table.add_row(
+        ["Most Used Emoji", f'{max(emojisUsed, key=emojisUsed.get)} ({max(emojisUsed.values())} uses)'])
 
     print(table)
-    print("Due to certain limitations on Discord's end, the name of the servers in the stats cannot be printed but their ID's can.")
+    print("Due to certain limitations on Discord's end, only id's can be printed for the values of some rows.")
 
 
 if __name__ == '__main__':
