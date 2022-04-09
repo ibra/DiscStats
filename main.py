@@ -2,6 +2,7 @@ import click
 import os
 import csv
 import re
+from collections import defaultdict
 from prettytable import PrettyTable
 
 
@@ -15,7 +16,7 @@ emojisUsed = {"kekw": 5, "lol": 10, "monkaS": 15}  # dummy data
 
 @ click.command()
 def main():
-    messages = {"21-0-0": 0}
+    messages = defaultdict(int)
     cumulativeChars = 0
     cumulativeWords = 0
 
@@ -26,11 +27,12 @@ def main():
                     reader = csv.reader(f)
                     next(reader)
                     for row in reader:
-                        messages[row[0]] += 1
+                        date = re.match(r'\d{4}-\d{2}-\d{2}', row[1])[0]
+                        messages[date] += 1
                         cumulativeChars += len(row[2])
                         cumulativeWords += len(re.findall(r'\w+', row[2]))
 
-    cumulativeMessages = sum(messages.values)
+    cumulativeMessages = sum(messages.values())
 
     table = PrettyTable(['Stat', 'Value'])
     table.add_row(['Cumulative Messages', "{:,}".format(
@@ -39,7 +41,7 @@ def main():
         cumulativeChars/cumulativeMessages, 2)) + " characters"])
     table.add_row(['Average Message Length [words]', str(round(
         cumulativeWords/cumulativeMessages, 2)) + " words"])
-    table.add_row(["Chattiest Day", mostMessagesOnDate])
+    table.add_row(["Chattiest Day", max(messages, key=messages.get) + "("])
 
     print(table)
     print("Due to certain limitations on Discord's end, the name of the servers in the stats cannot be printed but their ID's can.")
