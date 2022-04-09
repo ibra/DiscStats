@@ -18,7 +18,7 @@ def main():
     cumulativeChars = 0
     cumulativeWords = 0
 
-    for path, subdirs, files in os.walk(packageDir+"\messages"):
+    for path, _, files in os.walk(packageDir+"\messages"):
         for name in files:
             if name.endswith(".csv"):
                 with open(os.path.join(path, name), "r", encoding='cp437') as f:
