@@ -14,7 +14,7 @@ mostUsedWord = 0
 @click.command()
 def main():
     messages = defaultdict(int)
-    emojisUsed = defaultdict(str)
+    emojisUsed = defaultdict(int)
     cumulativeChars = 0
     cumulativeWords = 0
 
@@ -27,6 +27,12 @@ def main():
                     for row in reader:
                         date = re.match(r'\d{4}-\d{2}-\d{2}', row[1])[0]
                         messages[date] += 1
+
+                        emojis = re.findall(r'<:\w+:[0-9]+>', row[2])
+                        if emojis:
+                            for match in emojis:
+                                emojisUsed[match] += 1
+
                         cumulativeChars += len(row[2])
                         cumulativeWords += len(re.findall(r'\w+', row[2]))
 
@@ -41,7 +47,6 @@ def main():
         cumulativeWords/cumulativeMessages, 2)) + " words"])
     table.add_row(
         ["Chattiest Day", f'{max(messages, key=messages.get)} ({max(messages.values())} messages)'])
-    # TODO: implement most used emoji, this code uses undefined variables atm
     table.add_row(
         ["Most Used Emoji", f'{max(emojisUsed, key=emojisUsed.get)} ({max(emojisUsed.values())} uses)'])
 
