@@ -1,11 +1,9 @@
-from genericpath import exists
 import click
-import os
-import os.path
-import csv
-import re
 from collections import defaultdict
+import csv
+import os
 from prettytable import PrettyTable
+import re
 
 
 @click.command()
@@ -15,11 +13,13 @@ def main(dir):
         print("Could not find the package directory! Make sure its in the project folder and is unzipped into one \"package\" folder.")
         return
 
-    messages = defaultdict(int)
+    messages = []
+    words = []
+
+    messagesPerDay = defaultdict(int)
     emojisUsed = defaultdict(int)
     mentionedUsers = defaultdict(int)
     cumulativeChars = 0
-    cumulativeWords = 0
 
     for path, _, files in os.walk(dir+"\messages"):
         for name in files:
@@ -28,8 +28,9 @@ def main(dir):
                     reader = csv.reader(f)
                     next(reader)
                     for row in reader:
+                        messages.append(row[2])
                         date = re.match(r'\d{4}-\d{2}-\d{2}', row[1])[0]
-                        messages[date] += 1
+                        messagesPerDay[date] += 1
 
                         emojis = re.findall(r'<:\w+:[0-9]+>', row[2])
                         if emojis:
@@ -42,26 +43,27 @@ def main(dir):
                                 mentionedUsers[match] += 1
 
                         cumulativeChars += len(row[2])
-                        cumulativeWords += len(re.findall(r'\w+', row[2]))
+                        lineWords = re.findall(r'\w+', row[2])
+                        for word in lineWords:
+                            words.append(word)
 
-    cumulativeMessages = sum(messages.values())
-
+    cumulativeMessages = sum(messagesPerDay.values())
     table = PrettyTable(['Stat', 'Value'])
 
     table.add_row(
-        ['Cumulative Messages', f'{"{:,}".format(cumulativeMessages)} messages, {"{:,}".format(cumulativeWords)} words'])
+        ['Cumulative Messages', f'{"{:,}".format(cumulativeMessages)} messages, {"{:,}".format(len(words))} words'])
     table.add_row(['Average Message Length',
-                  f'{str(round(cumulativeWords/cumulativeMessages, 2))} words, {str(round(cumulativeChars/cumulativeMessages, 2))} characters'])
+                  f'{str(round(len(words)/cumulativeMessages, 2))} words, {str(round(cumulativeChars/cumulativeMessages, 2))} characters'])
 
     table.add_row(
-        ["Chattiest Day", f'{max(messages, key=messages.get)} ({max(messages.values())} messages)'])
+        ["Chattiest Day", f'{max(messagesPerDay, key=messagesPerDay.get)} ({max(messagesPerDay.values())} messages)'])
 
     if len(emojisUsed) > 0:
         table.add_row(
             ["Most Used Emoji", f'{max(emojisUsed, key=emojisUsed.get)} ({max(emojisUsed.values())} uses)'])
     table.add_row(["Most Mentioned User",
                   f'{max(mentionedUsers, key=mentionedUsers.get)} ({max(mentionedUsers.values())} mentions)'])
-
+    table.add_row(["First Discord Message", messages[0]])
     print(table)
     print("Due to certain limitations on Discord's end, only id's can be printed for the values of some rows.")
 
