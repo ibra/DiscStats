@@ -9,7 +9,8 @@ import re
 @click.command()
 @click.option('--dir', default="package")
 def main(dir):
-    if(os.path.exists(os.getcwd()+f'\{dir}') == False):
+    package_dir = os.path.join(os.getcwd(), dir)
+    if(os.path.exists(package_path) == False):
         print("Could not find the package directory! Make sure its in the project folder and is unzipped into one \"package\" folder.")
         return
 
@@ -21,7 +22,8 @@ def main(dir):
     mentionedUsers = defaultdict(int)
     cumulativeChars = 0
 
-    for path, _, files in os.walk(dir+"\messages"):
+    messages_dir = os.path.join(dir, "messages")
+    for path, _, files in os.walk(messages_dir):
         for name in files:
             if name.endswith(".csv"):
                 with open(os.path.join(path, name), "r", encoding='cp437') as f:
