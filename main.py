@@ -78,6 +78,5 @@ def main(dir):
     print(table)
     print("Due to certain limitations on Discord's end, only id's can be printed for the values of some rows.")
 
-
 if __name__ == '__main__':
     main()
