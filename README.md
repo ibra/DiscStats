@@ -3,7 +3,7 @@ cool statistics generated using your discord data. <br><br>
 ![image](https://user-images.githubusercontent.com/61324615/162575845-50461c9a-1cb4-47b1-9cf4-fce863a9f79e.png)
 
 ### How?
-DiscoStats is not a service that breaks the Discord Terms of Service or Community Guidelines. Discord has an option to request data which is what this entire application is based upon. It just scans through the lines of text of every message you have ever sent and generates statistics based upon that. As a forewarning, you need to request your data to use the application, which could potentially take up to 30 days.
+Discord has a feature which allows you to request your data which is what this entire application is based upon. It scans through the lines of text of every message you have ever sent and generates statistics based upon that. **As a forewarning, you need to request your data to use the application, which could potentially take up to a week or two.**
 
 ### Installation
 ⚠️ make sure you have python 3.7+ installed.
