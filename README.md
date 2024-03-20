@@ -1,4 +1,4 @@
-## DiscoStats
+## DiscStats
 cool statistics generated using your discord data. <br><br>
 ![image](https://user-images.githubusercontent.com/61324615/162575845-50461c9a-1cb4-47b1-9cf4-fce863a9f79e.png)
 
